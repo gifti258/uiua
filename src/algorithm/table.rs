@@ -345,6 +345,7 @@ pub fn cross(env: &mut Uiua) -> UiuaResult {
 
 pub fn combinate(env: &mut Uiua) -> UiuaResult {
     crate::profile_function!();
+    let f = env.pop_function()?;
     let ns = rank_list("Combinate", env)?;
     if ns.len() < 2 {
         return Err(env.error(format!(
@@ -352,7 +353,6 @@ pub fn combinate(env: &mut Uiua) -> UiuaResult {
             ns.len()
         )));
     }
-    let f = env.pop_function()?;
     let f_sig = f.signature();
     if f_sig.outputs != 1 {
         return Err(env.error(format!(

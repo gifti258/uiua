@@ -590,8 +590,8 @@ impl Primitive {
                 env.with_pack(|env| env.call(f))?;
             }
             Primitive::Fill => {
-                let fill = env.pop_function()?;
                 let f = env.pop_function()?;
+                let fill = env.pop_function()?;
                 env.call(fill)?;
                 let fill_value = env.pop("fill value")?;
                 env.with_fill(fill_value, |env| env.call(f))?;
@@ -603,8 +603,8 @@ impl Primitive {
             }
             Primitive::Bracket => fork::bracket(env)?,
             Primitive::Try => {
-                let f = env.pop_function()?;
                 let handler = env.pop_function()?;
+                let f = env.pop_function()?;
                 let f_args = f.signature().args;
                 let backup = env.clone_stack_top(f_args);
                 let bottom = env.stack_size().saturating_sub(f_args);
@@ -683,8 +683,8 @@ impl Primitive {
                 env.call(f)?;
             }
             Primitive::SetInverse => {
-                let f = env.pop_function()?;
                 let _inv = env.pop_function()?;
+                let f = env.pop_function()?;
                 env.call(f)?;
             }
             Primitive::Trace => trace(env, false)?,

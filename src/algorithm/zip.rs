@@ -623,8 +623,8 @@ fn tribute2(f: Arc<Function>, xs: Value, a: Value, env: &mut Uiua) -> UiuaResult
 
 pub fn level(env: &mut Uiua) -> UiuaResult {
     crate::profile_function!();
-    let ns = rank_list("Level", env)?;
     let f = env.pop_function()?;
+    let ns = rank_list("Level", env)?;
     let f_sig = f.signature();
     if f_sig.outputs != 1 {
         return Err(env.error(format!(

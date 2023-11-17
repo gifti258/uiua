@@ -244,7 +244,7 @@ impl Uiua {
         Ok((instrs, sig))
     }
     fn words(&mut self, words: Vec<Sp<Word>>, call: bool) -> UiuaResult {
-        for word in words.into_iter().rev() {
+        for word in words {
             self.word(word, call)?;
         }
         Ok(())
@@ -480,7 +480,7 @@ impl Uiua {
                 if call && inner.iter().all(|instr| matches!(instr, Instr::Push(_))) {
                     // Inline constant arrays
                     instrs.pop();
-                    let values = inner.into_iter().rev().map(|instr| match instr {
+                    let values = inner.into_iter().map(|instr| match instr {
                         Instr::Push(v) => v,
                         _ => unreachable!(),
                     });
@@ -505,7 +505,7 @@ impl Uiua {
                 }
                 self.push_instr(Instr::BeginArray);
                 let mut inner = Vec::new();
-                for lines in arr.lines.into_iter().rev() {
+                for lines in arr.lines.into_iter() {
                     inner.extend(self.compile_words(lines, true)?);
                 }
                 let span = self.add_span(word.span.clone());
@@ -514,7 +514,7 @@ impl Uiua {
                     // Inline constant arrays
                     instrs.pop();
                     let empty = inner.is_empty();
-                    let values = inner.into_iter().rev().map(|instr| match instr {
+                    let values = inner.into_iter().map(|instr| match instr {
                         Instr::Push(v) => v,
                         _ => unreachable!(),
                     });
@@ -767,7 +767,7 @@ impl Uiua {
             {
                 match &modified.modifier.value {
                     Modifier::Primitive(Primitive::Dip) => {
-                        let mut branches = sw.branches.into_iter().rev();
+                        let mut branches = sw.branches.into_iter();
                         let mut new = Modified {
                             modifier: modified.modifier.clone(),
                             operands: vec![branches.next().unwrap().map(Word::Func)],
@@ -970,9 +970,9 @@ impl Uiua {
                     .clone()
                     .into_iter()
                     .filter(|word| word.value.is_code());
-                let (a_instrs, a_sig) =
-                    self.compile_operand_words(vec![operands.next().unwrap()])?;
                 let (b_instrs, b_sig) =
+                    self.compile_operand_words(vec![operands.next().unwrap()])?;
+                let (a_instrs, a_sig) =
                     self.compile_operand_words(vec![operands.next().unwrap()])?;
                 if let Some((a_sig, b_sig)) = a_sig.ok().zip(b_sig.ok()) {
                     let span = self.add_span(modified.modifier.span.clone());
@@ -1032,9 +1032,9 @@ impl Uiua {
                     .clone()
                     .into_iter()
                     .filter(|word| word.value.is_code());
+                let (b_instrs, _) = self.compile_operand_words(vec![operands.next().unwrap()])?;
                 let (a_instrs, a_sig) =
                     self.compile_operand_words(vec![operands.next().unwrap()])?;
-                let (b_instrs, _) = self.compile_operand_words(vec![operands.next().unwrap()])?;
                 if let Ok(a_sig) = a_sig {
                     let span = self.add_span(modified.modifier.span.clone());
                     let mut instrs = vec![Instr::PushTemp {

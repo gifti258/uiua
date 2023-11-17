@@ -252,6 +252,7 @@ impl<'a> VirtualEnv<'a> {
                     self.handle_args_outputs(args, outputs)?;
                 }
                 Level | Combinate => {
+                    let sig = self.pop_func()?.signature();
                     let ranks = self.pop_func()?;
                     let ranks_sig = ranks.signature();
                     if ranks_sig.outputs != 1 {
@@ -266,7 +267,6 @@ impl<'a> VirtualEnv<'a> {
                             but its signature is {ranks_sig}"
                         ));
                     }
-                    let sig = self.pop_func()?.signature();
                     self.handle_sig(sig)?;
                 }
                 Fold => {
@@ -274,8 +274,8 @@ impl<'a> VirtualEnv<'a> {
                     self.handle_sig(f.signature())?;
                 }
                 Try => {
-                    let f = self.pop_func()?;
                     let handler = self.pop_func()?;
+                    let f = self.pop_func()?;
                     let f_sig = f.signature();
                     let target_handler_sig = Signature::new(f_sig.args + 1, f_sig.outputs);
                     let handler_sig = handler.signature();
@@ -304,8 +304,8 @@ impl<'a> VirtualEnv<'a> {
                     }
                 }
                 Under => {
-                    let f = self.pop_func()?;
                     let g = self.pop_func()?;
+                    let f = self.pop_func()?;
                     self.set_min_height();
                     if let Some((before, after)) = f.into_owned().under(g.signature()) {
                         let before_sig = before.signature();
@@ -319,10 +319,10 @@ impl<'a> VirtualEnv<'a> {
                     }
                 }
                 Fill => {
+                    let f = self.pop_func()?;
                     let fill = self.pop_func()?;
                     self.handle_sig(fill.signature())?;
                     let _fill_value = self.pop()?;
-                    let f = self.pop_func()?;
                     self.handle_sig(f.signature())?;
                 }
                 Pack => {
@@ -399,8 +399,8 @@ impl<'a> VirtualEnv<'a> {
                     self.handle_sig(f.signature())?;
                 }
                 SetInverse => {
-                    let f = self.pop_func()?;
                     let _inv = self.pop_func()?;
+                    let f = self.pop_func()?;
                     self.handle_sig(f.signature())?;
                 }
                 Dump => {

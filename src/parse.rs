@@ -378,7 +378,7 @@ impl Parser {
                 use Primitive::*;
                 let span = || prev.span.clone().merge(word.span.clone());
                 if let (Word::Primitive(a), Word::Primitive(b)) = (&prev.value, &word.value) {
-                    match (a, b) {
+                    match (b, a) {
                         (Flip, Over) => self.diagnostics.push(Diagnostic::new(
                             format!("Prefer `{Dip}{Dup}` over `{Flip}{Over}` for clarity"),
                             span(),

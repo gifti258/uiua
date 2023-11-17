@@ -496,7 +496,7 @@ fn invert_rectify_pattern(input: &[Instr]) -> Option<(&[Instr], Vec<Instr>)> {
 }
 
 fn invert_setinverse_pattern(input: &[Instr]) -> Option<(&[Instr], Vec<Instr>)> {
-    let [Instr::PushFunc(inv), Instr::PushFunc(_), Instr::Prim(Primitive::SetInverse, _), input @ ..] =
+    let [Instr::PushFunc(_), Instr::PushFunc(inv), Instr::Prim(Primitive::SetInverse, _), input @ ..] =
         input
     else {
         return None;

@@ -498,7 +498,7 @@ code:
                 }
                 &Instr::EndArray { span, boxed } => self.with_span(span, |env| {
                     let start = env.scope.array.pop().unwrap();
-                    let values = env.stack.drain(start..).rev();
+                    let values = env.stack.drain(start..);
                     let values: Vec<Value> = if boxed {
                         values.map(Boxed).map(Value::from).collect()
                     } else {

@@ -33,7 +33,9 @@ pub(crate) fn rank_list(name: &str, env: &mut Uiua) -> UiuaResult<Vec<Option<isi
         env.push(Array::<f64>::default())
     }
     env.call(ns)?;
-    env.pop("rank list")?.as_rank_list(env, "")
+    let mut res = env.pop("rank list")?.as_rank_list(env, "")?;
+    res.reverse();
+    Ok(res)
 }
 
 pub fn repeat(env: &mut Uiua) -> UiuaResult {
