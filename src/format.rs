@@ -607,25 +607,17 @@ impl<'a> Formatter<'a> {
                             .any(|words| words.iter().any(|word| word_is_multiline(&word.value)))
                 });
                 for (i, br) in sw.branches.iter().enumerate() {
-                    let add_leading_newline = i == 0
-                        && any_multiline
-                        && !(br.value.lines.first()).is_some_and(|line| line.is_empty());
-                    if add_leading_newline {
+                    if i > 0 {
+                        self.output.push('|');
+                    }
+                    if any_multiline {
                         self.output.push('\n');
                         for _ in 0..self.config.multiline_indent * (depth + 1) {
                             self.output.push(' ');
                         }
-                    }
-                    if i > 0 {
-                        if any_multiline {
-                            for _ in 0..(self.config.multiline_indent * depth.saturating_sub(1))
-                                .saturating_sub(2)
-                            {
-                                self.output.push(' ');
-                            }
-                        }
-                        self.output.push('|');
-                        if any_multiline {
+                        for _ in 0..(self.config.multiline_indent * depth.saturating_sub(1))
+                            .saturating_sub(2)
+                        {
                             self.output.push(' ');
                         }
                     }
